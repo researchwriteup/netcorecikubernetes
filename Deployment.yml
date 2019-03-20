@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wuapp-deployment # change the name of deployment to be shown in kubernetes
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mywuapp  # change the name of the app need to be shown in kubernetes
+    spec:
+      containers:
+      - name: hpatani-wuapp  #change the name of the container need to be shown in kubernetes
+        image: hpatani/docker-demo-hub:latest # change the name of the docker repository image need to be use in kubernetes
+        ports:
+        - name: mydotnetport  # change the name of the portname need to be use in kubernetes
+          containerPort: 80 # change the name of the port need to be use in kubernetes
+      imagePullSecrets:
+      - name: regcred
+
+---
+#---------- Service Configuration Deployement ------------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wuservice-deploy # change the name of the service need to be use in kubernetes
+spec:
+ type: NodePort     
+ ports:
+  - port: 80    # change the name of the port need to be use in kubernetes
+    targetPort: 80 # change the name of the port need to be use in kubernetes
+    nodePort: 30010 # change the value to next available port use in kubernetes
+    protocol: TCP
+ selector:
+   app: mywuapp # change the name to the name of app mentioned in deployment configuration
